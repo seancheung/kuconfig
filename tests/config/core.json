@@ -1,0 +1,17 @@
+{
+    "env": {
+        "$env": ["APP_NAME", "default"]
+    },
+    "path": {
+        "$path": "storage/content"
+    },
+    "file": {
+        "$file": ["tests/config/file.txt", "utf8"]
+    },
+    "json": {
+        "$json": "{\"name\":\"test\",\"count\":10}"
+    },
+    "number": {
+        "$number": "1"
+    }
+}

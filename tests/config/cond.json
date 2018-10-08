@@ -1,0 +1,14 @@
+{
+    "cond": {
+        "$cond": [false, 1, 2]
+    },
+    "and": {
+        "$and": [true, false]
+    },
+    "or": {
+        "$or": [false, true]
+    },
+    "not": {
+        "$not": true
+    }
+}

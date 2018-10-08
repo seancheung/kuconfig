@@ -1,0 +1,4 @@
+CONFIG_FILE=tests/config/env.json
+
+APP_NAME=myapp
+# COMMENT_VALUE=100

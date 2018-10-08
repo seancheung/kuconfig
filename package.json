@@ -1,0 +1,35 @@
+{
+  "name": "kuconfig",
+  "version": "0.1.0",
+  "description": "Smart configuration control with zero dependencies",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha tests/*.spec.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seancheung/kuconfig.git"
+  },
+  "keywords": [
+    "conf",
+    "config",
+    "configuration",
+    "env",
+    "environment",
+    "webpack",
+    "loader",
+    "plugin",
+    "utils",
+    "dotenv"
+  ],
+  "author": "Sean Cheung <theoxuanx@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/seancheung/kuconfig/issues"
+  },
+  "homepage": "https://github.com/seancheung/kuconfig#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0"
+  }
+}

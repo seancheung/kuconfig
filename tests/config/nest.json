@@ -1,0 +1,18 @@
+{
+    "prop": {
+        "key": {
+            "$env": "PROP_KEY"
+        },
+        "value": {
+            "$env": ["PROP_VALUE", 3]
+        }
+    },
+    "array": [
+        {
+            "$env": ["ARRAY_FIRST", 0]
+        }
+    ],
+    "child": {
+        "$env": ["CHILD_FIRST", { "$env": ["CHILD_SECOND", 1] }]
+    }
+}
