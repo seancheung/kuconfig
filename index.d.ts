@@ -13,7 +13,7 @@ interface Utils {
      * @param src Merge source
      * @param tar Merge target
      */
-    merge(src: any, tar): any;
+    merge(src: any, tar: any): any;
 
     /**
      * Read envs from file path
