@@ -1,0 +1,17 @@
+{
+    "upper": {
+        "$upper": "toUpperCase"
+    },
+    "lower": {
+        "$lower": "ToLowerCase"
+    },
+    "split1": {
+        "$split": "a b  c"
+    },
+    "split2": {
+        "$split": ["a,b,c", ","]
+    },
+    "split3": {
+        "$split": ["a,b,c", ",", 2]
+    }
+}

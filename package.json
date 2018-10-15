@@ -1,6 +1,6 @@
 {
   "name": "kuconfig",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Smart configuration control with zero dependencies",
   "main": "index.js",
   "types": "index.d.ts",
@@ -31,6 +31,7 @@
   "homepage": "https://github.com/seancheung/kuconfig#readme",
   "devDependencies": {
     "chai": "^4.2.0",
+    "eslint": "^5.7.0",
     "mocha": "^5.2.0"
   }
 }

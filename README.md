@@ -445,6 +445,29 @@ Return boolean test result(!!) of the given value
 * params: `[any, string]`
 * returns `boolean`
 
+**$upper**
+
+Transform input string to upper case
+
+* params: `string`
+* returns `string`
+
+### Other Keywords
+
+**$lower**
+
+Transform input string to lower case
+
+* params: `string`
+* returns `string`
+
+**$split**
+
+Split input string into an array with optional delimiter and/or limit
+
+* params: `string|[string, string]|[string, string, number]`
+* returns `string[]`
+
 ### Other Keywords
 
 **Operators**
