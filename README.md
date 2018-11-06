@@ -239,7 +239,7 @@ Parse the given string into object
 
 Parse the given string into a number
 
-* params: `string`
+* params: `string`|`number`
 * returns `number`
 
 **$concat**

@@ -19,6 +19,7 @@ describe('core test', function() {
             .with.property('count')
             .that.is.a('number');
         expect(config.number).to.eq(1);
+        expect(config.number2).to.eq(2);
     });
     after(function() {
         delete process.env.CONFIG_FILE;
