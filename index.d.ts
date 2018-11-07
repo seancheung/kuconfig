@@ -38,6 +38,11 @@ interface Utils {
      * @param inject Env vars
      */
     load(file: string, envs?: boolean): any;
+
+    /**
+     * Clear cached config
+     */
+    desolve(): void
 }
 
 declare interface Config {
