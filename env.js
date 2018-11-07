@@ -4,7 +4,7 @@ const path = require('path');
 const utils = require('./utils');
 
 const envs = utils.env(process.env.ENV_FILE || '.env', process.env.ENV_INJECT);
-let dirname = process.env.CONFIG_FILE;
+let dirname = process.env.CONFIG_FILE || envs.CONFIG_FILE;
 if (!dirname) {
     dirname = path.resolve(process.cwd(), 'config');
 } else if (!path.isAbsolute(dirname)) {
