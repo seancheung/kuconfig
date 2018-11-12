@@ -16,5 +16,8 @@
     },
     "number2": {
         "$number": 2
+    },
+    "number3": {
+        "$number": null
     }
 }
