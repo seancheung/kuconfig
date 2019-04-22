@@ -347,6 +347,13 @@ Return the length of an array
 * params: `any[]`
 * returns `number`
 
+**$join**
+
+Join an array to string with the given separator
+
+* params: `[any[], string]`
+* returns `string`
+
 **$merge**
 
 Return the merge of two objects
@@ -382,21 +389,21 @@ Split an object into key-value pairs
 * params: `any`
 * returns `[any, any][]`
 
-**$cond**
+**$cond/$if**
 
 Return the second or third element based on the boolean value of the first element
 
 * params: `[boolean, any, any]`
 * returns `any`
 
-**$and**
+**$and/&&**
 
 Return true only if both two elements' boolean values are true
 
 * params: `[boolean, boolean]`
 * returns `boolean`
 
-**$or**
+**$or/||**
 
 Return true if any of the two elements' boolean value is true
 
@@ -438,7 +445,7 @@ Return true only if the given value is of the given type
 * params: `[any, string]`
 * returns `boolean`
 
-**$test**
+**$test|!!**
 
 Return boolean test result(!!) of the given value
 
@@ -476,7 +483,7 @@ $abs, $add(+), $sub(-), $mul(\*), $div(/), $mod(%), $ceil, $floor, $round, $trun
 
 **Comparers**
 
-$gt(>), $gte(>=), $lt(<), $lte(<=), $eq(===), $eqv(==), $ne(!==), $nev(!=), $in, $ni
+$gt(>), $gte(>=), $lt(<), $lte(<=), $eq(===), $eql(==), $ne(!==), $neql(!=), $in, $ni
 
 ## Utils
 
