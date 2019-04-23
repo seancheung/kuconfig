@@ -5,6 +5,11 @@ declare namespace config {
         readonly __: Utils;
         readonly [x: string]: any;
     }
+    type Parser = (
+        params: any,
+        fn: Record<string, Parser>,
+        vars?: Record<string, any>
+    ) => any;
     interface Utils {
         /**
          * Deep clone an object
@@ -49,6 +54,19 @@ declare namespace config {
          * Clear cached config
          */
         desolve(): void;
+
+        /**
+         * Resolve source config with custom parsers
+         *
+         * @param fn Custom parsers
+         * @param src Source config
+         * @param vars vars
+         */
+        parse(
+            fn: Record<string, Parser>,
+            src: any,
+            vars?: Record<string, any>
+        ): any;
     }
 }
 export = config;

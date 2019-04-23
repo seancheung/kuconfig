@@ -1,0 +1,9 @@
+{
+    "$raw": true,
+    "id": {
+        "$env": "MY_ID"
+    },
+    "name": {
+        "$var": "name"
+    }
+}

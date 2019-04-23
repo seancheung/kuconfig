@@ -1,6 +1,6 @@
 {
   "name": "kuconfig",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Smart configuration control with zero dependencies",
   "main": "index.js",
   "types": "index.d.ts",

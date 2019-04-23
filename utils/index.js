@@ -3,8 +3,7 @@ const path = require('path');
 
 const dir = path.join(__dirname, '../lib');
 const fn = {};
-fs
-    .readdirSync(dir)
+fs.readdirSync(dir)
     .filter(f => /.js$/.test(f))
     .forEach(filename => {
         const file = path.join(dir, filename);
@@ -114,6 +113,10 @@ function resolve(fn, source, envs) {
     if (typeof source !== 'object') {
         return source;
     }
+    if (source['$raw']) {
+        delete source['$raw'];
+        return source;
+    }
     for (const key of Object.keys(source)) {
         let value = resolve(fn, source[key], envs);
         if (key in fn) {
@@ -160,7 +163,9 @@ function load(filename, envs) {
                     'utf8'
                 );
                 const basename = path.basename(file, path.extname(file));
-                Object.assign(config, { [basename]: fn.resolve(JSON.parse(content), envs) });
+                Object.assign(config, {
+                    [basename]: fn.resolve(JSON.parse(content), envs)
+                });
             });
         }
     }
@@ -194,5 +199,10 @@ module.exports = {
     /**
      * Load config
      */
-    load
+    load,
+
+    /**
+     * Parser
+     */
+    parse: resolve
 };

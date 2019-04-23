@@ -214,6 +214,13 @@ Get value from environment variables(first try env file, then process.env) with 
 * params: `string`|`[string, any]`
 * returns `any`
 
+**$var**
+
+Get value from env file with an optional fallback value
+
+* params: `string`|`[string, any]`
+* returns `any`
+
 **$path**
 
 Resolve the path to absolute from current working directory
@@ -484,6 +491,29 @@ $abs, $add(+), $sub(-), $mul(\*), $div(/), $mod(%), $ceil, $floor, $round, $trun
 **Comparers**
 
 $gt(>), $gte(>=), $lt(<), $lte(<=), $eq(===), $eql(==), $ne(!==), $neql(!=), $in, $ni
+
+### Skip Parsing
+
+To skip parsing a file or a part of a file, use **$skip** options:
+
+```json
+{
+  "$skip": true,
+  "key": {
+    "$env": "APP_KEY"
+  }
+}
+```
+
+The loaded file will be
+
+```json
+{
+  "key": {
+    "$env": "APP_KEY"
+  }
+}
+```
 
 ## Utils
 

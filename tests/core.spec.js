@@ -21,6 +21,7 @@ describe('core test', function() {
         expect(config.number).to.eq(1);
         expect(config.number2).to.eq(2);
         expect(config.number3).to.be.null;
+        expect(config.__.desolve);
     });
     after(function() {
         delete process.env.CONFIG_FILE;
