@@ -356,9 +356,9 @@ Return the length of an array
 
 **$join**
 
-Join an array to string with the given separator
+Join an array to string with an optional separator
 
-* params: `[any[], string]`
+* params: `[any[]]`|`[any[], string]`
 * returns `string`
 
 **$merge**

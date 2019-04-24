@@ -20,6 +20,8 @@ describe('array test', function() {
             .to.be.an('array')
             .with.lengthOf(2);
         expect(config.count).to.eq(3);
+        expect(config.join1).to.eq('abc');
+        expect(config.join2).to.eq('a,b,c');
     });
     after(function() {
         delete process.env.CONFIG_FILE;
