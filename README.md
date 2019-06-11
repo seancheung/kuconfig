@@ -482,6 +482,13 @@ Split input string into an array with optional delimiter and/or limit
 * params: `string|[string, string]|[string, string, number]`
 * returns `string[]`
 
+**$expand**
+
+Expand variables as in shellscript
+
+* params: `string`
+* returns `string`
+
 ### Other Keywords
 
 **Operators**

@@ -13,5 +13,11 @@
     },
     "split3": {
         "$split": ["a,b,c", ",", 2]
+    },
+    "expand1": {
+        "$expand": "${expandvar1} is very good"
+    },
+    "expand2": {
+        "$expand": "${expandvar1} and ${expandvar2} are very good"
     }
 }

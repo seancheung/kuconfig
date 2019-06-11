@@ -13,6 +13,7 @@ fs.readdirSync(dir)
         }
     });
 fn.resolve = resolve.bind(null, fn);
+fn.substitute = substitute
 
 /**
  * Deep clone an object
@@ -131,6 +132,22 @@ function resolve(fn, source, envs) {
 }
 
 /**
+ * Expand variables as in shellscript
+ *
+ * @param {string} src
+ * @param {{[x: string]: any}} envs
+ * @returns {string}
+ */
+function substitute(src, envs) {
+    if (src == null) {
+        return src;
+    }
+    return src.replace(/\$\{((?:[^{}\\]|\\.)+)\}/g, (t, cap) =>
+        cap in envs ? envs[cap] : t
+    );
+}
+
+/**
  * Load config
  *
  * @param {string} filename
@@ -204,5 +221,10 @@ module.exports = {
     /**
      * Parser
      */
-    parse: resolve
+    parse: resolve,
+
+    /**
+     * Expand variables as in shellscript
+     */
+    substitute
 };

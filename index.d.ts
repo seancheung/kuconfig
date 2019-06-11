@@ -67,6 +67,14 @@ declare namespace config {
             src: any,
             vars?: Record<string, any>
         ): any;
+
+        /**
+         * Expand variables as in shellscript
+         *
+         * @param src
+         * @param envs
+         */
+        substitute(src: string, envs: Record<string, any>): string;
     }
 }
 export = config;
