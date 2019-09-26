@@ -17,13 +17,13 @@ npm i kuconfig
 
 This package by default read the _config_ folder in your working directory:
 
-* config
-  * app.json
-  * database.json
-  * language.json
+-   config
+    -   app.json
+    -   database.json
+    -   language.json
 
 ```javascript
-const config = require("kuconfig");
+const config = require('kuconfig');
 console.log(config.app.name);
 console.log(config.database.mysql.host);
 console.log(config.language.supported[0]);
@@ -31,18 +31,18 @@ console.log(config.language.supported[0]);
 
 If folder _config_ does not exist, file _config.json_ will be checked instead.
 
-* config.json
+-   config.json
 
 ```json
 {
-  "app": {
-    "name": "MY APP"
-  }
+    "app": {
+        "name": "MY APP"
+    }
 }
 ```
 
 ```javascript
-const config = require("kuconfig");
+const config = require('kuconfig');
 console.log(config.app.name);
 ```
 
@@ -50,11 +50,11 @@ You can override the config file path with an environment variable:
 
 ```javascript
 // read a folder
-process.env.CONFIG_FILE='src/config'
+process.env.CONFIG_FILE = 'src/config';
 // read a file
-process.env.CONFIG_FILE='src/config.json'
+process.env.CONFIG_FILE = 'src/config.json';
 // with absolute path
-process.env.CONFIG_FILE='/path/to/src/config.json'
+process.env.CONFIG_FILE = '/path/to/src/config.json';
 ```
 
 If you specified a single file, the config object will be the file itself rather than a nested object with the filename as its key(like folder reading does).
@@ -63,15 +63,15 @@ _src/config.json_
 
 ```json
 {
-  "app": {
-    "name": "myapp"
-  }
+    "app": {
+        "name": "myapp"
+    }
 }
 ```
 
 ```javascript
 process.env.CONFIG_FILE = src / config.json;
-const config = require("kuconfig");
+const config = require('kuconfig');
 console.log(config.app.name);
 ```
 
@@ -81,7 +81,7 @@ It won't be loaded again once done. To reload configs, you need to call:
 // delete cached config
 config.__.desolve();
 // reload
-config = require("kuconfig");
+config = require('kuconfig');
 ```
 
 ## Env Override Mode
@@ -90,10 +90,10 @@ _src/default.json_
 
 ```json
 {
-  "app": {
-    "name": "myapp",
-    "host": "localhost"
-  }
+    "app": {
+        "name": "myapp",
+        "host": "localhost"
+    }
 }
 ```
 
@@ -101,33 +101,33 @@ _src/development.json_
 
 ```json
 {
-  "app": {
-    "port": 8080,
-    "host": "myhost"
-  }
+    "app": {
+        "port": 8080,
+        "host": "myhost"
+    }
 }
 ```
 
 ```javascript
-process.env.NODE_ENV='development'
-const config = require("kuconfig/env");
+process.env.NODE_ENV = 'development';
+const config = require('kuconfig/env');
 ```
 
 This merges config files to
 
 ```json
 {
-  "app": {
-    "name": "myapp",
-    "port": 8080,
-    "host": "myhost"
-  }
+    "app": {
+        "name": "myapp",
+        "port": 8080,
+        "host": "myhost"
+    }
 }
 ```
 
 ## Env File
 
-By default, This package read a *.env* file in your working directory and get environment variables from this file.
+By default, This package read a _.env_ file in your working directory and get environment variables from this file.
 
 ```bash
 NODE_ENV=production
@@ -137,12 +137,11 @@ CONFIG_FILE=src/config.json
 You may override this behaviour by passing the following environment variable:
 
 ```javascript
-process.env.ENV_FILE='src/.env'
+process.env.ENV_FILE = 'src/.env';
 const config = require('kuconfig');
 ```
 
 You may optionally set `ENV_INJECT` to inject env file variables into `process.env`.
-
 
 **Existing environment variables won't be overrided.**
 
@@ -163,23 +162,23 @@ A bunch of **keywords** can be used in config files
 
 ```json
 {
-  "name": {
-    "$env": "APP_NAME"
-  },
-  "database": {
-    "port": {
-      "$env": ["DB_PORT", 3306]
+    "name": {
+        "$env": "APP_NAME"
     },
-    "host": {
-      "$env": ["DB_HOST", "localhost"]
-    },
-    "username": {
-      "$env": "DB_USER"
-    },
-    "password": {
-      "$env": ["DB_PASS", { "$env": "DB_USER" }]
+    "database": {
+        "port": {
+            "$env": ["DB_PORT", 3306]
+        },
+        "host": {
+            "$env": ["DB_HOST", "localhost"]
+        },
+        "username": {
+            "$env": "DB_USER"
+        },
+        "password": {
+            "$env": ["DB_PASS", { "$env": "DB_USER" }]
+        }
     }
-  }
 }
 ```
 
@@ -195,305 +194,310 @@ The loaded config will be
 
 ```json
 {
-  "name": "myapp",
-  "database": {
-    "port": 3306,
-    "host": "10.10.10.100",
-    "username": "admin",
-    "password": "admin"
-  }
+    "name": "myapp",
+    "database": {
+        "port": 3306,
+        "host": "10.10.10.100",
+        "username": "admin",
+        "password": "admin"
+    }
 }
 ```
 
 Here is a list of available **keywords**:
 
-**$env**
+**\$env**
 
 Get value from environment variables(first try env file, then process.env) with an optional fallback value
 
-* params: `string`|`[string, any]`
-* returns `any`
+-   params: `string`|`[string, any]`
+-   returns `any`
 
-**$var**
+**\$var**
 
 Get value from env file with an optional fallback value
 
-* params: `string`|`[string, any]`
-* returns `any`
+-   params: `string`|`[string, any]`
+-   returns `any`
 
-**$path**
+**\$path**
 
 Resolve the path to absolute from current working directory
 
-* params: `string`
-* returns `string`
+-   params: `string`
+-   returns `string`
 
-**$file**
+**\$file**
 
 Resolve the path and read the file with an optional encoding
 
-* params: `string`|`[string, string]`
-* returns `string`|`Buffer`
+-   params: `string`|`[string, string]`
+-   returns `string`|`Buffer`
 
-**$json**
+**\$json**
 
 Parse the given string into object
 
-* params: `string`
-* returns `any`
+-   params: `string`
+-   returns `any`
 
-**$number**
+**\$number**
 
 Parse the given string into a number
 
-* params: `string`|`number`
-* returns `number`
+-   params: `string`|`number`
+-   returns `number`
 
-**$concat**
+**\$concat**
 
 Concat strings or arrays
 
-* params: `string[]`|`[][]`
-* returns `string`|`any[]`
+-   params: `string[]`|`[][]`
+-   returns `string`|`any[]`
 
-**$max**
+**\$max**
 
 Return the max number in the array
 
-* params: `number[]`
-* returns `number`
+-   params: `number[]`
+-   returns `number`
 
-**$min**
+**\$min**
 
 Return the min number in the array
 
-* params: `number[]`
-* returns `number`
+-   params: `number[]`
+-   returns `number`
 
-**$sum**
+**\$sum**
 
 Sum the numbers in the array
 
-* params: `number[]`
-* returns `number`
+-   params: `number[]`
+-   returns `number`
 
-**$avg**
+**\$avg**
 
 Return the average value of the array
 
-* params: `number[]`
-* returns `number`
+-   params: `number[]`
+-   returns `number`
 
-**$first**
+**\$first**
 
 Return the first element in the array
 
-* params: `any[]`
-* returns `any`
+-   params: `any[]`
+-   returns `any`
 
-**$last**
+**\$last**
 
 Return the last element in the array
 
-* params: `any[]`
-* returns `any`
+-   params: `any[]`
+-   returns `any`
 
-**$at**
+**\$at**
 
 Return element in the array at the given index
 
-* params: `[any[], number]`
-* returns `any`
+-   params: `[any[], number]`
+-   returns `any`
 
-**$asce**
+**\$asce**
 
 Sort the numbers in ascending order
 
-* params: `number[]`
-* returns `number[]`
+-   params: `number[]`
+-   returns `number[]`
 
-**$asce**
+**\$asce**
 
 Sort the numbers in descending order
 
-* params: `number[]`
-* returns `number[]`
+-   params: `number[]`
+-   returns `number[]`
 
-**$rand**
+**\$rand**
 
 Return an element at random index
 
-* params: `any[]`
-* returns `any`
+-   params: `any[]`
+-   returns `any`
 
-**$rands**
+**\$rands**
 
 Return the given amount of elements at random indices
 
-* params: `[any[], number]`
-* returns `any[]`
+-   params: `[any[], number]`
+-   returns `any[]`
 
-**$reverse**
+**\$reverse**
 
 Reverse an array
 
-* params: `any[]`
-* returns `any[]`
+-   params: `any[]`
+-   returns `any[]`
 
-**$slice**
+**\$slice**
 
 Slice an array from the given index to an optional end index
 
-* params: `[any[], number]`|`[any[], number, number]`
-* returns `any[]`
+-   params: `[any[], number]`|`[any[], number, number]`
+-   returns `any[]`
 
-**$count**
+**\$count**
 
 Return the length of an array
 
-* params: `any[]`
-* returns `number`
+-   params: `any[]`
+-   returns `number`
 
-**$join**
+**\$join**
 
 Join an array to string with an optional separator
 
-* params: `[any[]]`|`[any[], string]`
-* returns `string`
+-   params: `[any[]]`|`[any[], string]`
+-   returns `string`
 
-**$merge**
+**\$merge**
 
 Return the merge of two objects
 
-* params: `[any, any]`
-* returns `any`
+-   params: `[any, any]`
+-   returns `any`
 
-**$keys**
+**\$keys**
 
 Return the keys of an object
 
-* params: `any`
-* returns `string[]`
+-   params: `any`
+-   returns `string[]`
 
-**$vals**
+**\$vals**
 
 Return the values of an object
 
-* params: `any`
-* returns `any[]`
+-   params: `any`
+-   returns `any[]`
 
-**$zip**
+**\$zip**
 
 Merge a series of key-value pairs into an object
 
-* params: `[any, any][]`
-* returns `any`
+-   params: `[any, any][]`
+-   returns `any`
 
-**$zap**
+**\$zap**
 
 Split an object into key-value pairs
 
-* params: `any`
-* returns `[any, any][]`
+-   params: `any`
+-   returns `[any, any][]`
 
 **$cond/$if**
 
 Return the second or third element based on the boolean value of the first element
 
-* params: `[boolean, any, any]`
-* returns `any`
+-   params: `[boolean, any, any]`
+-   returns `any`
 
-**$and/&&**
+**\$and/&&**
 
 Return true only if both two elements' boolean values are true
 
-* params: `[boolean, boolean]`
-* returns `boolean`
+-   params: `[boolean, boolean]`
+-   returns `boolean`
 
-**$or/||**
+**\$or/||**
 
 Return true if any of the two elements' boolean value is true
 
-* params: `[boolean, boolean]`
-* returns `boolean`
+-   params: `[boolean, boolean]`
+-   returns `boolean`
 
-**$not**
+**\$not**
 
 Return true only if the given value is false
 
-* params: `boolean`
-* returns `boolean`
+-   params: `boolean`
+-   returns `boolean`
 
-**$true**
+**\$true**
 
 Return true if the given value is true or 'true'(case insensitive) or 1 or '1'
 
-* params: `boolean|string`
-* returns `boolean`
+-   params: `boolean|string`
+-   returns `boolean`
 
-**$null**
+**\$null**
 
 Return true if the given value is null or undefined
 
-* params: `any`
-* returns `boolean`
+-   params: `any`
+-   returns `boolean`
 
-**$undefined**
+**\$undefined**
 
 Return true only if the given value is undefined
 
-* params: `any`
-* returns `boolean`
+-   params: `any`
+-   returns `boolean`
 
-**$type**
+**\$type**
 
 Return true only if the given value is of the given type
 
-* params: `[any, string]`
-* returns `boolean`
+-   params: `[any, string]`
+-   returns `boolean`
 
-**$test|!!**
+**\$test|!!**
 
 Return boolean test result(!!) of the given value
 
-* params: `[any, string]`
-* returns `boolean`
+-   params: `[any, string]`
+-   returns `boolean`
 
-**$upper**
+**\$upper**
 
 Transform input string to upper case
 
-* params: `string`
-* returns `string`
+-   params: `string`
+-   returns `string`
 
-### Other Keywords
-
-**$lower**
+**\$lower**
 
 Transform input string to lower case
 
-* params: `string`
-* returns `string`
+-   params: `string`
+-   returns `string`
 
-**$split**
+**\$split**
 
 Split input string into an array with optional delimiter and/or limit
 
-* params: `string|[string, string]|[string, string, number]`
-* returns `string[]`
+-   params: `string|[string, string]|[string, string, number]`
+-   returns `string[]`
 
-**$expand**
+**\$expand**
 
 Expand variables as in shellscript
 
-* params: `string`
-* returns `string`
+-   params: `string`
+-   returns `string`
+
+**\$regex**
+
+Transform string to regex with optional flags
+
+-   params: `string|[string, string]`
+-   returns `RegExp`
 
 ### Other Keywords
 
 **Operators**
 
-$abs, $add(+), $sub(-), $mul(\*), $div(/), $mod(%), $ceil, $floor, $round, $trunc, $sign
+$abs, $add(+), $sub(-), $mul(\*), $div(/), $mod(%), $ceil, $floor, $round, $trunc, \$sign
 
 **Comparers**
 
@@ -501,14 +505,14 @@ $gt(>), $gte(>=), $lt(<), $lte(<=), $eq(===), $eql(==), $ne(!==), $neql(!=), $in
 
 ### Skip Parsing
 
-To skip parsing a file or a part of a file, use **$skip** options:
+To skip parsing a file or a part of a file, use **\$skip** options:
 
 ```json
 {
-  "$skip": true,
-  "key": {
-    "$env": "APP_KEY"
-  }
+    "$skip": true,
+    "key": {
+        "$env": "APP_KEY"
+    }
 }
 ```
 
@@ -516,9 +520,9 @@ The loaded file will be
 
 ```json
 {
-  "key": {
-    "$env": "APP_KEY"
-  }
+    "key": {
+        "$env": "APP_KEY"
+    }
 }
 ```
 
@@ -534,24 +538,62 @@ const copy = config.__.clone(obj);
 const merged = config.__.merge(source, target);
 
 // load environment variables, optionally inject them into process.env
-const envs = config.__.env("./.env", true);
+const envs = config.__.env('./.env', true);
 
 // parse config by json string
 let conf = config.__.resolve(
-  JSON.parse(fs.readFileSync("./config.json", "utf8"))
+    JSON.parse(fs.readFileSync('./config.json', 'utf8')),
+    envs
 );
 
 // load config by path(absolute or relative to working directory)
-conf = config.__.load("./config.json");
+conf = config.__.load('./config.json');
 
 // delete config referenced cache(the next time you reference this module, config file will be reloaded)
 config.__.desolve();
+
+// parse config with custom expressions
+config.__.parse(
+    {
+        $encode(params) {
+            if (params == null) {
+                return params;
+            }
+            if (typeof params === 'string') {
+                return encodeURI(params);
+            }
+            throw new Error('$encode expects a string');
+        }
+    },
+    {
+        url: {
+            $encode: 'this is a test'
+        }
+    },
+    envs
+);
+
+// Expand variables as in shellscript
+config.__.substitute('Today is ${date} and I amd ${name}.', {
+    date: new Date(),
+    name: 'Adam'
+});
+// To support dynamic code execution(using v8 vm module)
+config.__.substitute(
+    'I am ${age} years old and I will be ${age + 1} next year. You can call me ${profile.name}.',
+    {
+        age: 17,
+        profile: {
+            name: 'Tom'
+        }
+    }
+);
 ```
 
 You can also use utils without the config instance:
 
 ```javascript
-const utils = require("kuconfig/utils");
+const utils = require('kuconfig/utils');
 // NOTE: utils.desolve will be undefined
 ```
 
@@ -560,16 +602,16 @@ const utils = require("kuconfig/utils");
 To integrate into webpack, there is a built-in plugin:
 
 ```javascript
-const KuconfigPlugin = require("kuconfig/utils/webpack");
+const KuconfigPlugin = require('kuconfig/utils/webpack');
 ```
 
 _webpack.config.js_
 
 ```javascript
 plugins: [
-  new KuconfigPlugin({
-    filename: path.resolve(__dirname, "path/to/config.json")
-  })
+    new KuconfigPlugin({
+        filename: path.resolve(__dirname, 'path/to/config.json')
+    })
 ];
 ```
 
@@ -578,7 +620,7 @@ And import that config in your modules:
 _index.js_
 
 ```javascript
-import * as config from "./path/to/config.json";
+import * as config from './path/to/config.json';
 ```
 
 You may add a resolve alias to shorten the import:
@@ -596,7 +638,7 @@ resolve: {
 _index.js_
 
 ```javascript
-import * as config from "config";
+import * as config from 'config';
 ```
 
 **NOTE**

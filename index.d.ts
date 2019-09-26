@@ -46,9 +46,9 @@ declare namespace config {
          * Load config
          *
          * @param file Config file path
-         * @param inject Env vars
+         * @param envs Env vars
          */
-        load(file: string, envs?: boolean): any;
+        load(file: string, envs?: Environments): any;
 
         /**
          * Clear cached config
@@ -71,10 +71,15 @@ declare namespace config {
         /**
          * Expand variables as in shellscript
          *
-         * @param src
-         * @param envs
+         * @param src Source string
+         * @param envs Env vars
+         * @param deep Enable code execution
          */
-        substitute(src: string, envs: Record<string, any>): string;
+        substitute(
+            src: string,
+            envs: Record<string, any>,
+            deep?: boolean
+        ): string;
     }
 }
 export = config;
