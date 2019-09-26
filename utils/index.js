@@ -13,7 +13,7 @@ fs.readdirSync(dir)
         }
     });
 fn.resolve = resolve.bind(null, fn);
-fn.substitute = substitute
+fn.substitute = substitute;
 
 /**
  * Deep clone an object
@@ -136,15 +136,33 @@ function resolve(fn, source, envs) {
  *
  * @param {string} src
  * @param {{[x: string]: any}} envs
+ * @param {boolean} deep
  * @returns {string}
  */
-function substitute(src, envs) {
+function substitute(src, envs, deep) {
     if (src == null) {
         return src;
     }
-    return src.replace(/\$\{((?:[^{}\\]|\\.)+)\}/g, (t, cap) =>
+    let res = src.replace(/\$\{((?:[^{}\\]|\\.)+)\}/g, (t, cap) =>
         cap in envs ? envs[cap] : t
     );
+    if (deep) {
+        const vm = require('vm');
+        const ctx = vm.createContext(envs, {
+            codeGeneration: {
+                strings: false,
+                wasm: false
+            }
+        });
+        res = src.replace(/\$\{((?:[^{}\\]|\\.)+)\}/g, (t, cap) => {
+            try {
+                return vm.runInNewContext(cap, ctx);
+            } catch (error) {
+                return `<Error parsing "${cap}": ${error.message}>`;
+            }
+        });
+    }
+    return res;
 }
 
 /**
