@@ -19,5 +19,11 @@
     },
     "expand2": {
         "$expand": "${expandvar1} and ${expandvar2} are very good"
+    },
+    "regex1": {
+        "$regex": "^\\d+\\.\\d+(\\.\\d+)?$"
+    },
+    "regex2": {
+        "$regex": ["test", "i"]
     }
 }
