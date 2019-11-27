@@ -1,12 +1,12 @@
-const fs = require('fs');
 const path = require('path');
 const utils = require('./utils');
+const fsx = require('./utils/fs');
 
 const envs = utils.env(process.env.ENV_FILE || '.env', process.env.ENV_INJECT);
 let filename = process.env.CONFIG_FILE || envs.CONFIG_FILE;
 if (!filename) {
     filename = path.resolve(process.cwd(), 'config');
-    if (!fs.existsSync(filename) || !fs.lstatSync(filename).isDirectory()) {
+    if (!fsx.isDirectory(filename)) {
         filename = path.resolve(process.cwd(), 'config.json');
     }
 } else if (!path.isAbsolute(filename)) {

@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const fsx = require('./fs');
 
 const dir = path.join(__dirname, '../lib');
 const fn = {};
@@ -75,26 +76,27 @@ function env(file, inject) {
     if (!path.isAbsolute(file)) {
         file = path.resolve(process.cwd(), file);
     }
-    if (fs.existsSync(file) && fs.lstatSync(file).isFile()) {
-        const content = fs.readFileSync(file, 'utf8');
-        content.split('\n').forEach(line => {
-            const kv = line.match(/^\s*([\w.-]+)\s*=\s*(.*)?\s*$/);
-            if (kv) {
-                const k = kv[1];
-                let v = kv[2] || '';
-                if (
-                    v &&
-                    v.length > 0 &&
-                    v.charAt(0) === '"' &&
-                    v.charAt(v.length - 1) === '"'
-                ) {
-                    v = v.replace(/\\n/gm, '\n');
-                }
-                v = v.replace(/(^['"]|['"]$)/g, '').trim();
-                envs[k] = v;
-            }
-        });
+    if (!fsx.isFile(file)) {
+        return envs;
     }
+    const content = fs.readFileSync(file, 'utf8');
+    content.split('\n').forEach(line => {
+        const kv = line.match(/^\s*([\w.-]+)\s*=\s*(.*)?\s*$/);
+        if (kv) {
+            const k = kv[1];
+            let v = kv[2] || '';
+            if (
+                v &&
+                v.length > 0 &&
+                v.charAt(0) === '"' &&
+                v.charAt(v.length - 1) === '"'
+            ) {
+                v = v.replace(/\\n/gm, '\n');
+            }
+            v = v.replace(/(^['"]|['"]$)/g, '').trim();
+            envs[k] = v;
+        }
+    });
 
     if (inject) {
         Object.keys(envs).forEach(k => {
@@ -177,32 +179,27 @@ function load(filename, envs) {
     if (!path.isAbsolute(filename)) {
         filename = path.resolve(process.cwd(), filename);
     }
-    if (fs.existsSync(filename)) {
-        const stat = fs.lstatSync(filename);
-        if (stat.isFile()) {
-            if (/.json$/.test(filename)) {
-                const content = fs.readFileSync(filename, 'utf8');
-                Object.assign(config, fn.resolve(JSON.parse(content), envs));
-            }
-        } else if (stat.isDirectory()) {
-            const files = fs
-                .readdirSync(filename)
-                .filter(
-                    f =>
-                        fs.lstatSync(path.resolve(filename, f)).isFile() &&
-                        /.json$/.test(f)
-                );
-            files.forEach(file => {
-                const content = fs.readFileSync(
-                    path.resolve(filename, file),
-                    'utf8'
-                );
-                const basename = path.basename(file, path.extname(file));
-                Object.assign(config, {
-                    [basename]: fn.resolve(JSON.parse(content), envs)
-                });
-            });
+    if (fsx.isFile(filename)) {
+        if (/.json$/.test(filename)) {
+            const content = fs.readFileSync(filename, 'utf8');
+            Object.assign(config, fn.resolve(JSON.parse(content), envs));
         }
+    } else if (fsx.isDirectory(filename)) {
+        const files = fs
+            .readdirSync(filename)
+            .filter(
+                f => fsx.isFile(path.resolve(filename, f)) && /.json$/.test(f)
+            );
+        files.forEach(file => {
+            const content = fs.readFileSync(
+                path.resolve(filename, file),
+                'utf8'
+            );
+            const basename = path.basename(file, path.extname(file));
+            Object.assign(config, {
+                [basename]: fn.resolve(JSON.parse(content), envs)
+            });
+        });
     }
 
     return config;

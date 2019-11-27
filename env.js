@@ -2,6 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 const utils = require('./utils');
+const fsx = require('./utils/fs');
 
 const envs = utils.env(process.env.ENV_FILE || '.env', process.env.ENV_INJECT);
 let dirname = process.env.CONFIG_FILE || envs.CONFIG_FILE;
@@ -12,7 +13,7 @@ if (!dirname) {
 }
 
 let config;
-if (!fs.existsSync(dirname) || !fs.lstatSync(dirname).isDirectory()) {
+if (!fsx.isDirectory(dirname)) {
     console.warn('config directory not found at path "%s"', dirname);
     config = {};
 } else {
