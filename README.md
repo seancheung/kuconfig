@@ -7,6 +7,8 @@ Smart configuration control
 [travis-master]: https://img.shields.io/travis/seancheung/kuconfig/master.svg?label=master
 [travis-url]: https://travis-ci.org/seancheung/kuconfig
 
+[中文](https://github.com/seancheung/kuconfig/blob/master/README.zh.md)
+
 ## Install
 
 ```bash
@@ -15,12 +17,22 @@ npm i kuconfig
 
 ## Basic Usage
 
-This package by default read the _config_ folder in your working directory:
+This package by default reads the _config_ folder in your working directory and merge all json files in it into one object, with each file name(without extension) being key and corresponding content being value:
 
 -   config
     -   app.json
     -   database.json
     -   language.json
+
+Loaded as
+
+```json
+{
+    "app": {/** content of app.json **/},
+    "database": {/** content of database.json **/},
+    "language": {/** content of language.json **/},
+}
+```
 
 ```javascript
 const config = require('kuconfig');
@@ -46,7 +58,7 @@ const config = require('kuconfig');
 console.log(config.app.name);
 ```
 
-You can override the config file path with an environment variable:
+You can override the config file path with an environment variable `CONFIG_FILE`(must be set before this module being loaded):
 
 ```javascript
 // read a folder
@@ -55,24 +67,8 @@ process.env.CONFIG_FILE = 'src/config';
 process.env.CONFIG_FILE = 'src/config.json';
 // with absolute path
 process.env.CONFIG_FILE = '/path/to/src/config.json';
-```
-
-If you specified a single file, the config object will be the file itself rather than a nested object with the filename as its key(like folder reading does).
-
-_src/config.json_
-
-```json
-{
-    "app": {
-        "name": "myapp"
-    }
-}
-```
-
-```javascript
-process.env.CONFIG_FILE = src / config.json;
 const config = require('kuconfig');
-console.log(config.app.name);
+console.log(config.name);
 ```
 
 It won't be loaded again once done. To reload configs, you need to call:
@@ -85,6 +81,8 @@ config = require('kuconfig');
 ```
 
 ## Env Override Mode
+
+In this mode, the `config/default.json` is loaded, followed by `config/xxx.json`(where `xxx` is equal to `process.env.NODE_ENV`). Then a deep merge of those two objects happends.
 
 _src/default.json_
 
@@ -125,9 +123,9 @@ This merges config files to
 }
 ```
 
-## Env File
+## Env File(optional)
 
-By default, This package read a _.env_ file in your working directory and get environment variables from this file.
+By default, This package reads a _.env_ file in your working directory and gets extra environment variables from this file.
 
 ```bash
 NODE_ENV=production
@@ -158,7 +156,7 @@ CONFIG_FILE=src/config.json
 
 ## Smart Config File
 
-A bunch of **keywords** can be used in config files
+A bunch of **keywords** can be used in config files. The syntax is similar to mongodb query. Nested syntax is supported(they will be resolved inner to outer)
 
 ```json
 {
@@ -505,7 +503,7 @@ $gt(>), $gte(>=), $lt(<), $lte(<=), $eq(===), $eql(==), $ne(!==), $neql(!=), $in
 
 ### Skip Parsing
 
-To skip parsing a file or a part of a file, use **\$skip** options:
+To skip parsing a file or a part of a file, use **\$skip** option:
 
 ```json
 {
@@ -528,7 +526,7 @@ The loaded file will be
 
 ## Utils
 
-A utils is attached to each config instance. You can acces it by the getter `__`:
+A utils object is attached to each config instance. You can acces it by the getter `__`:
 
 ```javascript
 // make a deep cloned copy
@@ -574,7 +572,7 @@ config.__.parse(
 );
 
 // Expand variables as in shellscript
-config.__.substitute('Today is ${date} and I amd ${name}.', {
+config.__.substitute('Today is ${date} and I am ${name}.', {
     date: new Date(),
     name: 'Adam'
 });
@@ -586,7 +584,8 @@ config.__.substitute(
         profile: {
             name: 'Tom'
         }
-    }
+    },
+    true
 );
 ```
 
@@ -598,6 +597,8 @@ const utils = require('kuconfig/utils');
 ```
 
 ## Webpack
+
+> If this module is used in a front-end project, the loading will happen in bundling step. A parsed config object will be injected to the output bundle. Accessing the config object at runtime is nothing difference to accessing a plain object.
 
 To integrate into webpack, there is a built-in plugin:
 
