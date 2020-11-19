@@ -26,7 +26,7 @@ class Plugin {
             throw new Error(`invalid mode ${mode}`);
         }
         const config =
-            mode === 'override' ? require('../env') : require('../index');
+            mode === 'override' ? require('../override') : require('../index');
         this.source = `module.exports=${JSON.stringify(config)
             .replace(/\u2028/g, '\\u2028')
             .replace(/\u2029/g, '\\u2029')}`;

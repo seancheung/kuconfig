@@ -28,7 +28,7 @@ if (minor >= 59) {
 
 const { name } = require('../package.json');
 const modulePath = require('path').relative(process.cwd(), require.resolve(name, { paths: [process.cwd()] }))
-const config = process.env.KUCONFIG_MODE === 'override' ? require('../env') : require('../index');
+const config = process.env.KUCONFIG_MODE === 'override' ? require('../override') : require('../index');
 const moduleContent = `module.exports=${JSON.stringify(config)
     .replace(/\u2028/g, '\\u2028')
     .replace(/\u2029/g, '\\u2029')}`;

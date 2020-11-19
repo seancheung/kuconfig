@@ -80,7 +80,7 @@ config.__.desolve();
 config = require('kuconfig');
 ```
 
-## Env Override Mode
+## Override Mode
 
 In this mode, the `config/default.json` is loaded, followed by `config/xxx.json`(where `xxx` is equal to `process.env.NODE_ENV`). Then a deep merge of those two objects happends.
 
@@ -108,7 +108,7 @@ _src/development.json_
 
 ```javascript
 process.env.NODE_ENV = 'development';
-const config = require('kuconfig/env');
+const config = require('kuconfig/override');
 ```
 
 This merges config files to
