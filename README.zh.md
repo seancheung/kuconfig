@@ -17,7 +17,7 @@ npm i kuconfig
 
 ## 基本用法
 
-默认情况下此库会读取当前工作目录下的 _config_ 文件夹, 并将该目录下每个json文件的文件名(不含后缀)作为key, 内容作为值, 合并为一个object:
+默认情况下此库会读取当前工作目录下的 _config_ 文件夹, 并将该目录下每个 json 文件的文件名(不含后缀)作为 key, 内容作为值, 合并为一个 object:
 
 -   config
     -   app.json
@@ -28,9 +28,15 @@ npm i kuconfig
 
 ```json
 {
-    "app": {/** app.json 内容 **/},
-    "database": {/** database.json 内容 **/},
-    "language": {/** language.json 内容 **/},
+    "app": {
+        /** app.json 内容 **/
+    },
+    "database": {
+        /** database.json 内容 **/
+    },
+    "language": {
+        /** language.json 内容 **/
+    }
 }
 ```
 
@@ -81,7 +87,7 @@ config.__.desolve();
 config = require('kuconfig');
 ```
 
-## 多环境模式
+## 覆盖模式
 
 在此调用模式下, `config/default.json`会先被读取, 然后是`config/xxx.json`(`xxx`等于`process.env.NODE_ENV`). 之后这两个文件的内容会发生深合并
 
@@ -109,7 +115,7 @@ _src/development.json_
 
 ```javascript
 process.env.NODE_ENV = 'development';
-const config = require('kuconfig/env');
+const config = require('kuconfig/override');
 ```
 
 加载结果如下
@@ -142,7 +148,7 @@ const config = require('kuconfig');
 
 你还可以额外设置环境变量`ENV_INJECT`来将该文件中定义的环境变量注入`process.env`中.
 
-**process.env中已经存在的环境变量不会被覆盖**
+**process.env 中已经存在的环境变量不会被覆盖**
 
 ```bash
 process.env.ENV_INJECT='true'
@@ -157,7 +163,7 @@ CONFIG_FILE=src/config.json
 
 ## 智能配置
 
-配置文件中可以使用一些特殊的**关键字**. 其表达式形式与mongodb查询语句类似. 表达式可以嵌套使用(解析顺序从里到外)
+配置文件中可以使用一些特殊的**关键字**. 其表达式形式与 mongodb 查询语句类似. 表达式可以嵌套使用(解析顺序从里到外)
 
 ```json
 {
@@ -207,14 +213,14 @@ DB_USER=admin
 
 **\$env**
 
-从环境变量中读取指定名称变量的值(优先读取env文件, 然后是`process.env`)并可额外设置一个默认值(环境变量未找到时会使用此默认值)
+从环境变量中读取指定名称变量的值(优先读取 env 文件, 然后是`process.env`)并可额外设置一个默认值(环境变量未找到时会使用此默认值)
 
 -   参数: `string`|`[string, any]`
 -   返回 `any`
 
 **\$var**
 
-类似`$env`但只会从env文件中取值
+类似`$env`但只会从 env 文件中取值
 
 -   参数: `string`|`[string, any]`
 -   返回 `any`
@@ -235,7 +241,7 @@ DB_USER=admin
 
 **\$json**
 
-将指定的字符串反序列化为json对象
+将指定的字符串反序列化为 json 对象
 
 -   参数: `string`
 -   返回 `any`
@@ -424,7 +430,7 @@ DB_USER=admin
 
 **\$true**
 
-如果参数的值为boolean的`true`或字符串的`'true'`(大小写不敏感)或数值的`1`或字符串的`'1'`则返回`true`, 否则返回`false`
+如果参数的值为 boolean 的`true`或字符串的`'true'`(大小写不敏感)或数值的`1`或字符串的`'1'`则返回`true`, 否则返回`false`
 
 -   参数: `boolean|string`
 -   返回 `boolean`
@@ -480,14 +486,14 @@ DB_USER=admin
 
 **\$expand**
 
-将字符串中所有的`${xxx}`表达式解析为环境变量(类似于shell脚本的中的expand操作)
+将字符串中所有的`${xxx}`表达式解析为环境变量(类似于 shell 脚本的中的 expand 操作)
 
 -   参数: `string`
 -   返回 `string`
 
 **\$regex**
 
-将字符串转为正则表达式, 并可额外设置flag
+将字符串转为正则表达式, 并可额外设置 flag
 
 -   参数: `string|[string, string]`
 -   返回 `RegExp`
@@ -597,61 +603,138 @@ const utils = require('kuconfig/utils');
 // NOTE: 此时utils.desolve会不存在
 ```
 
-## Webpack支持
+## Webpack 支持
 
-> 如果是在前端则不会有文件系统或环境变量等，因此配置文件会在打包时候被解析完成并注入最终的bundle中. 运行时访问config对象等同于访问一个object
+> 如果是在前端则不会有文件系统或环境变量等，因此配置文件会在打包时候被解析完成并注入最终的 bundle 中. 运行时访问 config 对象等同于访问一个普通 object
 
-包含webpack支持插件:
+包含 webpack 支持插件:
 
 ```javascript
-const KuconfigPlugin = require('kuconfig/utils/webpack');
+const KuconfigPlugin = require('kuconfig/plugins/webpack');
 ```
 
 _webpack.config.js_
 
 ```javascript
-plugins: [
-    new KuconfigPlugin({
-        filename: path.resolve(__dirname, 'path/to/config.json')
-    })
-];
+plugins: [new KuconfigPlugin()];
 ```
 
-在需要使用config的地方引用此文件:
+引用配置:
 
 _index.js_
 
 ```javascript
-import * as config from './path/to/config.json';
+import * as config from 'kuconfig';
 ```
 
-可以添加一个alias来方便引用:
-
-_webpack.config.js_
+使用覆盖模式
 
 ```javascript
-resolve: {
-    alias: {
-        config: path.resolve(__dirname, 'path/to/config.json')
+import * as config from 'kuconfig/override';
+```
+
+## Metro(React Native)
+
+> 同 webpack 一样，加载后的配置会是一个普通 object
+
+使用提供的 metro babel transformer:
+
+_metro.config.js_
+
+```javascript
+module.exports = {
+    transformer: {
+        babelTransformerPath: require.resolve('kuconfig/plugins/metro')
     }
-},
+};
 ```
 
-_index.js_
+**与其他 transformer 一起使用**
+
+_transformers.js_
 
 ```javascript
-import * as config from 'config';
+const svgTransformer = require('react-native-svg-transformer');
+const configTransformer = require('kuconfig/plugins/metro');
+
+module.exports.transform = function ({ src, filename, options }) {
+    if (filename.endsWith('.svg')) {
+        return svgTransformer.transform({ src, filename, options });
+    } else {
+        return configTransformer.transform({ src, filename, options });
+    }
+};
 ```
 
-**注意**
-
-默认情况下该配置文件会被加载为字符串. 其与file-loader已兼容. 若发生冲突, 可使用`include/exclude`来过滤掉此文件被其他loader加载. 如
+_metro.config.js_
 
 ```javascript
+const { assetExts, sourceExts } = require('metro-config/src/defaults/defaults');
+
+module.exports = {
+    transformer: {
+        getTransformOptions: () => ({
+            transform: {
+                experimentalImportSupport: false,
+                inlineRequires: false
+            }
+        }),
+        babelTransformerPath: require.resolve('./transformer.js')
+    },
+    resolver: {
+        assetExts: assetExts.filter(ext => ext !== 'svg'),
+        sourceExts: [...sourceExts, 'svg']
+    }
+};
+```
+
+引用配置:
+
+```javascript
+import * as config from 'kuconfig';
+import * as config from 'kuconfig/override';
+```
+
+## 使用 Typescript
+
+默认情况下 import 的 config 对象实现了`Record<string, any>`。
+你可以在你的项目中添加一个 typing 文件来覆盖`kuconfig`的 module 声明：
+
+_kuconfig.d.ts_
+
+```typescript
+declare module 'kuconfig' {
+    /**
+     * 这个接口会与默认Config接口合并
+     */
+    interface Config {
+        /**
+         * 这里是你的配置文件中的属性
+         */
+        readonly name: string;
+        /**
+         * 可以拆分嵌套属性配置
+         */
+        readonly db: Readonly<Config.DB>;
+    }
+    namespace Config {
+        interface DB {
+            readonly host: string;
+            readonly port: number;
+        }
+    }
+}
+```
+
+对应的配置文件结构如下
+
+```json
 {
-    test: /\.json$/,
-    exclude: /\/config\.json$/,
-    use: 'some-loader'
+    "name": "myapp",
+    "db": {
+        "host": "localhost",
+        "port": 3306
+    }
 }
 ```
 
