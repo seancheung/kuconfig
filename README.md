@@ -28,9 +28,15 @@ Loaded as
 
 ```json
 {
-    "app": {/** content of app.json **/},
-    "database": {/** content of database.json **/},
-    "language": {/** content of language.json **/},
+    "app": {
+        /** content of app.json **/
+    },
+    "database": {
+        /** content of database.json **/
+    },
+    "language": {
+        /** content of language.json **/
+    }
 }
 ```
 
@@ -80,7 +86,11 @@ config.__.desolve();
 config = require('kuconfig');
 ```
 
-## Env Override Mode
+## Override Mode
+
+```javascript
+require('kuconfig/override')
+```
 
 In this mode, the `config/default.json` is loaded, followed by `config/xxx.json`(where `xxx` is equal to `process.env.NODE_ENV`). Then a deep merge of those two objects happends.
 
@@ -108,7 +118,7 @@ _src/development.json_
 
 ```javascript
 process.env.NODE_ENV = 'development';
-const config = require('kuconfig/env');
+const config = require('kuconfig/override');
 ```
 
 This merges config files to
@@ -603,54 +613,129 @@ const utils = require('kuconfig/utils');
 To integrate into webpack, there is a built-in plugin:
 
 ```javascript
-const KuconfigPlugin = require('kuconfig/utils/webpack');
+const KuconfigPlugin = require('kuconfig/plugins/webpack');
 ```
 
 _webpack.config.js_
 
 ```javascript
-plugins: [
-    new KuconfigPlugin({
-        filename: path.resolve(__dirname, 'path/to/config.json')
-    })
-];
+plugins: [new KuconfigPlugin()];
 ```
 
-And import that config in your modules:
-
-_index.js_
+Usage in your modules:
 
 ```javascript
-import * as config from './path/to/config.json';
+import * as config from 'kuconfig';
 ```
 
-You may add a resolve alias to shorten the import:
-
-_webpack.config.js_
+Use override mode
 
 ```javascript
-resolve: {
-    alias: {
-        config: path.resolve(__dirname, 'path/to/config.json')
+import * as config from 'kuconfig/override';
+```
+
+## Metro(React Native)
+
+> Same as Webpack integration, the loaded object will be a plain object at run time.
+
+A metro babel transformer is provided:
+
+_metro.config.js_
+
+```javascript
+module.exports = {
+    transformer: {
+        babelTransformerPath: require.resolve('kuconfig/plugins/metro')
     }
-},
+};
 ```
 
-_index.js_
+**With other transformers**
+
+_transformers.js_
 
 ```javascript
-import * as config from 'config';
+const svgTransformer = require('react-native-svg-transformer');
+const configTransformer = require('kuconfig/plugins/metro');
+
+module.exports.transform = function ({ src, filename, options }) {
+    if (filename.endsWith('.svg')) {
+        return svgTransformer.transform({ src, filename, options });
+    } else {
+        return configTransformer.transform({ src, filename, options });
+    }
+};
 ```
 
-**NOTE**
-
-By default the json config is loaded as string. It's also compatible with file-loader. If conflicts occur, you may need to bypass the specific loader(s) with `include/exclude` filters. e.g.
+_metro.config.js_
 
 ```javascript
+const { assetExts, sourceExts } = require('metro-config/src/defaults/defaults');
+
+module.exports = {
+    transformer: {
+        getTransformOptions: () => ({
+            transform: {
+                experimentalImportSupport: false,
+                inlineRequires: false
+            }
+        }),
+        babelTransformerPath: require.resolve('./transformer.js')
+    },
+    resolver: {
+        assetExts: assetExts.filter(ext => ext !== 'svg'),
+        sourceExts: [...sourceExts, 'svg']
+    }
+};
+```
+
+Usage:
+
+```javascript
+import * as config from 'kuconfig';
+import * as config from 'kuconfig/override';
+```
+
+## Using Typescript
+
+By default the imported config object implements `Record<string, any>`.
+You can add a typing file to your project to overwite `kuconfig` module:
+
+_kuconfig.d.ts_
+
+```typescript
+declare module 'kuconfig' {
+    /**
+     * This interface will be merged with default Config interface
+     */
+    interface Config {
+        /**
+         * Here is the definition of your config
+         */
+        readonly name: string;
+        /**
+         * nested config
+         */
+        readonly db: Readonly<Config.DB>;
+    }
+    namespace Config {
+        interface DB {
+            readonly host: string;
+            readonly port: number;
+        }
+    }
+}
+```
+
+The corresponding config file structure:
+
+```json
 {
-    test: /\.json$/,
-    exclude: /\/config\.json$/,
-    use: 'some-loader'
+    "name": "myapp",
+    "db": {
+        "host": "localhost",
+        "port": 3306
+    }
 }
 ```
 

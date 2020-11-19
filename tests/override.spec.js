@@ -1,12 +1,12 @@
 const expect = require('chai').expect;
 
-describe('env mode test', function() {
+describe('override mode test', function() {
     before(function() {
         process.env.NODE_ENV = 'test';
         process.env.CONFIG_FILE = 'tests/config';
     });
     it('expect env config file to be loaded correctly ', function() {
-        const config = require('../env');
+        const config = require('../override');
         expect(config).to.be.an('object');
         expect(config.app).to.be.an('object');
         expect(config.app.name).to.eq('myapp');
@@ -16,6 +16,6 @@ describe('env mode test', function() {
     after(function() {
         delete process.env.NODE_ENV;
         delete process.env.CONFIG_FILE;
-        delete require.cache[require.resolve('../env')];
+        delete require.cache[require.resolve('../override')];
     });
 });
