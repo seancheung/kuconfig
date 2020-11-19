@@ -728,6 +728,8 @@ declare module 'kuconfig' {
         }
     }
 }
+// 记得添加这一行
+export {};
 ```
 
 对应的配置文件结构如下

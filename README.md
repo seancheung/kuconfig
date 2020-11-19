@@ -725,6 +725,8 @@ declare module 'kuconfig' {
         }
     }
 }
+// don't miss this line
+export {};
 ```
 
 The corresponding config file structure:
