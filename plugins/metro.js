@@ -1,3 +1,5 @@
+const path = require('path');
+
 let upstreamTransformer = null;
 const _require = file =>
     require(require.resolve(file, { paths: [process.cwd()] }));
@@ -27,20 +29,40 @@ if (minor >= 59) {
 }
 
 const { name } = require('../package.json');
-const modulePath = require('path').relative(process.cwd(), require.resolve(name, { paths: [process.cwd()] }))
-const config = process.env.KUCONFIG_MODE === 'override' ? require('../override') : require('../index');
-const moduleContent = `module.exports=${JSON.stringify(config)
-    .replace(/\u2028/g, '\\u2028')
-    .replace(/\u2029/g, '\\u2029')}`;
+const defaultPath = path.relative(
+    process.cwd(),
+    require.resolve(name, { paths: [process.cwd()] })
+);
+const overridePath = path.relative(
+    process.cwd(),
+    require.resolve(name + '/override', { paths: [process.cwd()] })
+);
 
 module.exports.transform = function (src, filename, options) {
     if (typeof src === 'object') {
         // handle RN >= 0.46
         ({ src, filename, options } = src);
     }
-    if (filename === modulePath) {
+    let config, override;
+    if (filename === defaultPath) {
+        if (!config) {
+            config = `module.exports=${JSON.stringify(require('../index'))
+                .replace(/\u2028/g, '\\u2028')
+                .replace(/\u2029/g, '\\u2029')}`;
+        }
         return upstreamTransformer.transform({
-            src: moduleContent,
+            src: config,
+            filename,
+            options
+        });
+    } else if (filename === overridePath) {
+        if (!override) {
+            override = `module.exports=${JSON.stringify(require('../override'))
+                .replace(/\u2028/g, '\\u2028')
+                .replace(/\u2029/g, '\\u2029')}`;
+        }
+        return upstreamTransformer.transform({
+            src: override,
             filename,
             options
         });

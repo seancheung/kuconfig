@@ -3,13 +3,29 @@ const RawModule = require(require.resolve('webpack/lib/RawModule', {
     paths: [process.cwd()]
 }));
 
-function resolve(source) {
+function resolve(ctx) {
+    let config, override;
     return resolver => (data, cb) => {
         const { request } = data;
         if (request === name) {
+            if (!config) {
+                config = ctx.getDefault();
+            }
             return cb(
                 null,
-                new RawModule(source, `resolved|${name}`, `${name} (resolved)`)
+                new RawModule(config, `resolved|${name}`, `${name} (resolved)`)
+            );
+        } else if (request === name + '/override') {
+            if (!override) {
+                override = ctx.getOverride();
+            }
+            return cb(
+                null,
+                new RawModule(
+                    override,
+                    `resolved|${name}`,
+                    `${name} (resolved)`
+                )
             );
         }
         return resolver(data, cb);
@@ -17,17 +33,14 @@ function resolve(source) {
 }
 
 class Plugin {
-    /**
-     * @param {{mode?: 'merge'|'override'}} options
-     */
-    constructor(options) {
-        let mode = (options && options.mode) || 'merge';
-        if (mode !== 'merge' && mode !== 'override') {
-            throw new Error(`invalid mode ${mode}`);
-        }
-        const config =
-            mode === 'override' ? require('../override') : require('../index');
-        this.source = `module.exports=${JSON.stringify(config)
+    getDefault() {
+        return `module.exports=${JSON.stringify(require('../index'))
+            .replace(/\u2028/g, '\\u2028')
+            .replace(/\u2029/g, '\\u2029')}`;
+    }
+
+    getOverride() {
+        return `module.exports=${JSON.stringify(require('../override'))
             .replace(/\u2028/g, '\\u2028')
             .replace(/\u2029/g, '\\u2029')}`;
     }
@@ -35,11 +48,11 @@ class Plugin {
     apply(compiler) {
         if (compiler.hooks != null) {
             compiler.hooks.normalModuleFactory.tap(name, nmf => {
-                nmf.hooks.resolver.tap(name, resolve(this.source));
+                nmf.hooks.resolver.tap(name, resolve(this));
             });
         } else {
             compiler.plugin('normal-module-factory', nmf => {
-                nmf.plugin('resolver', resolve(this.source));
+                nmf.plugin('resolver', resolve(this));
             });
         }
     }
