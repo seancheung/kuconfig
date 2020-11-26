@@ -1,4 +1,6 @@
 const path = require('path');
+const fs = require('fs');
+const crypto = require('crypto');
 
 let upstreamTransformer = null;
 const _require = file =>
@@ -38,6 +40,17 @@ const overridePath = path.relative(
     require.resolve(name + '/override', { paths: [process.cwd()] })
 );
 
+module.exports.getCacheKey = function () {
+    const content = JSON.stringify(require('../index'));
+    const hash = crypto.createHash('md5');
+    if (upstreamTransformer.getCacheKey) {
+        hash.update(upstreamTransformer.getCacheKey());
+    }
+    hash.update(fs.readFileSync(__filename))
+        .update(require('../package.json').version)
+        .update(content);
+    return hash.digest('hex');
+};
 module.exports.transform = function (src, filename, options) {
     if (typeof src === 'object') {
         // handle RN >= 0.46

@@ -661,6 +661,7 @@ _transformers.js_
 const svgTransformer = require('react-native-svg-transformer');
 const configTransformer = require('kuconfig/plugins/metro');
 
+module.exports.getCacheKey = configTransformer.getCacheKey;
 module.exports.transform = function ({ src, filename, options }) {
     if (filename.endsWith('.svg')) {
         return svgTransformer.transform({ src, filename, options });
@@ -698,6 +699,8 @@ module.exports = {
 import * as config from 'kuconfig';
 import * as config from 'kuconfig/override';
 ```
+
+> 配置文件修改不支持热更新, 需要重新执行`npm start`来使修改生效
 
 ## 使用 Typescript
 

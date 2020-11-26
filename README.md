@@ -658,6 +658,7 @@ _transformers.js_
 const svgTransformer = require('react-native-svg-transformer');
 const configTransformer = require('kuconfig/plugins/metro');
 
+module.exports.getCacheKey = configTransformer.getCacheKey;
 module.exports.transform = function ({ src, filename, options }) {
     if (filename.endsWith('.svg')) {
         return svgTransformer.transform({ src, filename, options });
@@ -695,6 +696,8 @@ Usage:
 import * as config from 'kuconfig';
 import * as config from 'kuconfig/override';
 ```
+
+> config file cannot be hot-reloaded, you must re-run `npm start` to make the changes to take effect
 
 ## Using Typescript
 
