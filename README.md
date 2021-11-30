@@ -92,6 +92,8 @@ config = require('kuconfig');
 require('kuconfig/override')
 ```
 
+> For esmodule style use `import config from 'kuconfig/override.js'` instead
+
 In this mode, the `config/default.json` is loaded, followed by `config/xxx.json`(where `xxx` is equal to `process.env.NODE_ENV`). Then a deep merge of those two objects happends.
 
 _src/default.json_

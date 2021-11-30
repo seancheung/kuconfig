@@ -93,6 +93,8 @@ config = require('kuconfig');
 require('kuconfig/override')
 ```
 
+> 如果使用esmodule则需要加上后缀 `import config from 'kuconfig/override.js'`
+
 在此调用模式下, `config/default.json`会先被读取, 然后是`config/xxx.json`(`xxx`等于`process.env.NODE_ENV`). 之后这两个文件的内容会发生深合并
 
 _src/default.json_
