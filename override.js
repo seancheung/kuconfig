@@ -17,7 +17,7 @@ if (!fsx.isDirectory(dirname)) {
     console.warn('config directory not found at path "%s"', dirname);
     config = {};
 } else {
-    const env = process.env.NODE_ENV || 'development';
+    const env = process.env.NODE_ENV;
     const basefile = path.join(dirname, 'default.json');
     const envfile = path.join(dirname, env + '.json');
     if (fs.existsSync(basefile)) {
