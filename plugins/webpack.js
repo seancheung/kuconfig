@@ -4,28 +4,16 @@ const RawModule = require(require.resolve('webpack/lib/RawModule', {
 }));
 
 function resolve(ctx) {
-    let config, override;
+    let config;
     return resolver => (data, cb) => {
         const { request } = data;
         if (request === name) {
             if (!config) {
-                config = ctx.getDefault();
+                config = ctx.getConfig();
             }
             return cb(
                 null,
                 new RawModule(config, `resolved|${name}`, `${name} (resolved)`)
-            );
-        } else if (request === name + '/override') {
-            if (!override) {
-                override = ctx.getOverride();
-            }
-            return cb(
-                null,
-                new RawModule(
-                    override,
-                    `resolved|${name}`,
-                    `${name} (resolved)`
-                )
             );
         }
         return resolver(data, cb);
@@ -33,14 +21,12 @@ function resolve(ctx) {
 }
 
 class Plugin {
-    getDefault() {
-        return `module.exports=${JSON.stringify(require('../index'))
-            .replace(/\u2028/g, '\\u2028')
-            .replace(/\u2029/g, '\\u2029')}`;
+    constructor(opts) {
+        this.opts = opts;
     }
-
-    getOverride() {
-        return `module.exports=${JSON.stringify(require('../override'))
+    getConfig() {
+        const id = this.opts?.mode === 'envs' ? '../override' : '../index';
+        return `module.exports=${JSON.stringify(id)
             .replace(/\u2028/g, '\\u2028')
             .replace(/\u2029/g, '\\u2029')}`;
     }

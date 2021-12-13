@@ -86,7 +86,7 @@ config.__.desolve();
 config = require('kuconfig');
 ```
 
-## Override Mode
+## Envs Mode
 
 ```javascript
 require('kuconfig/override')
@@ -608,9 +608,12 @@ const utils = require('kuconfig/utils');
 // NOTE: utils.desolve will be undefined
 ```
 
-## Webpack
+## Plugins
 
-> If this module is used in a front-end project, the loading will happen in bundling step. A parsed config object will be injected to the output bundle. Accessing the config object at runtime is nothing difference to accessing a plain object.
+If this module is used in a front-end project, the loading will happen in bundling step. A parsed config object will be injected to the output bundle. Accessing the config object at runtime is nothing difference to accessing a plain object.
+
+
+### Webpack
 
 To integrate into webpack, there is a built-in plugin:
 
@@ -630,13 +633,40 @@ Usage in your modules:
 import * as config from 'kuconfig';
 ```
 
-Use override mode
+Use envs mode
 
 ```javascript
-import * as config from 'kuconfig/override';
+plugins: [new KuconfigPlugin({ mode: 'envs' })];
 ```
 
-## Metro(React Native)
+### Vite
+
+> Same as Webpack integration, the loaded object will be a plain object at run time.
+
+```javascript
+import kuconfig from "kuconfig/plugins/vite";
+```
+
+_vite.config.js_
+
+```javascript
+plugins: [kuconfig()];
+```
+
+Usage in your modules:
+
+```javascript
+import config from 'kuconfig';
+```
+
+Use envs mode
+
+```javascript
+plugins: [kuconfig({ mode: 'envs' })];
+```
+
+
+### Metro(React Native)
 
 > Same as Webpack integration, the loaded object will be a plain object at run time.
 

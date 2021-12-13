@@ -87,7 +87,7 @@ config.__.desolve();
 config = require('kuconfig');
 ```
 
-## 覆盖模式
+## 环境模式
 
 ```javascript
 require('kuconfig/override')
@@ -609,9 +609,12 @@ const utils = require('kuconfig/utils');
 // NOTE: 此时utils.desolve会不存在
 ```
 
-## Webpack 支持
+## 插件
 
-> 如果是在前端则不会有文件系统或环境变量等，因此配置文件会在打包时候被解析完成并注入最终的 bundle 中. 运行时访问 config 对象等同于访问一个普通 object
+如果是在前端则不会有文件系统或环境变量等，因此配置文件会在打包时候被解析完成并注入最终的 bundle 中. 运行时访问 config 对象等同于访问一个普通 object
+
+### Webpack 支持
+
 
 包含 webpack 支持插件:
 
@@ -633,13 +636,39 @@ _index.js_
 import * as config from 'kuconfig';
 ```
 
-使用覆盖模式
+使用环境模式
 
 ```javascript
 import * as config from 'kuconfig/override';
 ```
 
-## Metro(React Native)
+### Vite
+
+> 同 webpack 一样，加载后的配置会是一个普通 object
+
+```javascript
+import kuconfig from "kuconfig/plugins/vite";
+```
+
+_vite.config.js_
+
+```javascript
+plugins: [kuconfig()];
+```
+
+引用配置:
+
+```javascript
+import config from 'kuconfig';
+```
+
+使用环境模式
+
+```javascript
+plugins: [kuconfig({ mode: 'envs' })];
+```
+
+### Metro(React Native)
 
 > 同 webpack 一样，加载后的配置会是一个普通 object
 
