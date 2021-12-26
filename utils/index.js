@@ -88,12 +88,12 @@ function env(file, inject) {
             if (
                 v &&
                 v.length > 0 &&
-                v.charAt(0) === '"' &&
-                v.charAt(v.length - 1) === '"'
+                v.charAt(0) === '`' &&
+                v.charAt(v.length - 1) === '`'
             ) {
                 v = v.replace(/\\n/gm, '\n');
             }
-            v = v.replace(/(^['"]|['"]$)/g, '').trim();
+            v = v.replace(/(^[`]|[`]$)/g, '').trim();
             envs[k] = v;
         }
     });
