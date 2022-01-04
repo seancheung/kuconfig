@@ -653,7 +653,12 @@ import kuconfig from "kuconfig/plugins/vite";
 _vite.config.js_
 
 ```javascript
-plugins: [kuconfig()];
+{
+    optimizeDeps: {
+        exclude: ['kuconfig']
+    },
+    plugins: [kuconfig()]
+}
 ```
 
 引用配置:
@@ -665,7 +670,12 @@ import config from 'kuconfig';
 使用环境模式
 
 ```javascript
-plugins: [kuconfig({ mode: 'envs' })];
+{
+    optimizeDeps: {
+        exclude: ['kuconfig']
+    },
+    plugins: [kuconfig({ mode: 'envs' })]
+}
 ```
 
 ### Metro(React Native)

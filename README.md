@@ -89,7 +89,7 @@ config = require('kuconfig');
 ## Envs Mode
 
 ```javascript
-require('kuconfig/override')
+require('kuconfig/override');
 ```
 
 > For esmodule style use `import config from 'kuconfig/override.js'` instead
@@ -612,7 +612,6 @@ const utils = require('kuconfig/utils');
 
 If this module is used in a front-end project, the loading will happen in bundling step. A parsed config object will be injected to the output bundle. Accessing the config object at runtime is nothing difference to accessing a plain object.
 
-
 ### Webpack
 
 To integrate into webpack, there is a built-in plugin:
@@ -644,13 +643,18 @@ plugins: [new KuconfigPlugin({ mode: 'envs' })];
 > Same as Webpack integration, the loaded object will be a plain object at run time.
 
 ```javascript
-import kuconfig from "kuconfig/plugins/vite";
+import kuconfig from 'kuconfig/plugins/vite';
 ```
 
 _vite.config.js_
 
 ```javascript
-plugins: [kuconfig()];
+{
+    optimizeDeps: {
+        exclude: ['kuconfig']
+    },
+    plugins: [kuconfig()]
+}
 ```
 
 Usage in your modules:
@@ -662,9 +666,13 @@ import config from 'kuconfig';
 Use envs mode
 
 ```javascript
-plugins: [kuconfig({ mode: 'envs' })];
+{
+    optimizeDeps: {
+        exclude: ['kuconfig']
+    },
+    plugins: [kuconfig({ mode: 'envs' })]
+}
 ```
-
 
 ### Metro(React Native)
 
